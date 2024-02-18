@@ -13,8 +13,10 @@ mongoose
 });
 
 const app=express();
+app.use(express.json())
 
 app.use("/api/users" , require("./routes/UserRoute"))
+app.use("/api/auth" , require("./routes/authRoute"))
 
 app.listen(4000 , ()=>{
     console.log("server is running on port 4000")
