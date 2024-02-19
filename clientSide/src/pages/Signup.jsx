@@ -18,32 +18,34 @@ export default function Signup() {
     })
   };
   const navigate=useNavigate();
-  const formSubmitHandler =async (e) =>{
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
-    try{
-      setLoading(true)
-      const res =await fetch('/api/auth/signup',
-      {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-      },
-      body:JSON.stringify(formData)
+    try {
+      setLoading(true);
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-      const data=await res.json();
-      if(data.success === false){
+  
+      if (!res.ok) {
+        const errorData = await res.json();
         setLoading(false);
-        setError(data.message);
+        setError(errorData.message);
         return;
       }
+  
+      await res.json();
       setLoading(false);
       setError(null);
-      navigate('/sign-in')
-  } catch{
-    setLoading(false)
-    setError(error.message)
-  }
-    
+      navigate('/sign-in');
+    } catch (error) {
+      setLoading(false);
+      setError("An unexpected error occurred");
+      console.error("API request failed:", error);
+    }
   };
 
   return (

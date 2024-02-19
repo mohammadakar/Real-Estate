@@ -13,18 +13,26 @@ module.exports.signUp=asyncHandler(async(req,res)=>{
     
 })
 
-module.exports.signIn=asyncHandler(async(req,res)=>{
-    const {email,password}=req.body;
-    const validUser=await User.findOne({email});
-    if(!validUser){
-        return res.status(404).json({message:"Not Found"})
+module.exports.signIn = asyncHandler(async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const validUser = await User.findOne({ email });
+
+        if (!validUser) {
+            return res.status(404).json({ message: "Not Found" });
+        }
+
+        const validPassword = bcrypt.compareSync(password, validUser.password);
+
+        if (!validPassword) {
+            return res.status(400).json({ message: "Wrong credentials" });
+        }
+
+        const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+        const { password: pass, ...rest } = validUser._doc;
+        res.cookie('access_token', token, { httpOnly: true, expires: new Date(Date.now() + 24 * 60 * 60 * 1000) })
+            .status(200).json(rest);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-    const validPassword=bcrypt.compareSync(password,validUser.password);
-    if(!validPassword){
-        return res.status(400).json({message:"Wrong credentials"});
-    }
-    const token=jwt.sign({id:validUser._id},process.env.JWT_SECRET)
-    const {password:pass,...rest}=validUser._doc;
-    res.cookie('access_token',token,{httpOnly:true,expires:new Date(Date.now()+24*60*60*1000)})
-    .status(200).json(rest);
-})
+});
