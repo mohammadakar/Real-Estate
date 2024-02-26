@@ -1,6 +1,7 @@
 const express=require("express");
 const mongoose=require("mongoose")
-const dotenv=require("dotenv")
+const dotenv=require("dotenv");
+const cookie =require("cookie-parser")
 dotenv.config();
 
 mongoose
@@ -14,7 +15,7 @@ mongoose
 
 const app=express();
 app.use(express.json())
-
+app.use(cookie())
 app.use("/api/users" , require("./routes/UserRoute"))
 app.use("/api/auth" , require("./routes/authRoute"))
 
