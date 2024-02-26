@@ -4,7 +4,7 @@ const { verifyToken } = require("../utils/verifyUser");
 const router = require("express").Router();
 
 router.get("/test" , test);
-router.post("/update/:id",verifyToken,updateUser)
+router.put("/update/:id",verifyToken,updateUser)
 
 
 
