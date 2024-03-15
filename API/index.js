@@ -18,6 +18,7 @@ app.use(express.json())
 app.use(cookie())
 app.use("/api/users" , require("./routes/UserRoute"))
 app.use("/api/auth" , require("./routes/authRoute"))
+app.use("/api/listing" , require("./routes/listingRoute"))
 
 
 
