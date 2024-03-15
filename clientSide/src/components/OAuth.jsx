@@ -11,11 +11,11 @@ const OAuth = () => {
         try {
             const auth = getAuth(app);
 
-            // Check if the user is already signed in
+            
             const currentUser = auth.currentUser;
 
             if (currentUser) {
-                // User is already signed in, dispatch signInSuccess
+                
                 const { displayName, email, photoURL, uid } = currentUser;
                 const result = { user: { displayName, email, photoURL, uid } };
                 const res = await fetch('/api/auth/google', {
