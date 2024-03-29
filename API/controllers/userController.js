@@ -1,6 +1,7 @@
 const { User } = require("../models/User")
 const errorHandler =require("../utils/error")
-const bcrypt =require("bcryptjs")
+const bcrypt =require("bcryptjs");
+const Listing=require("../models/Listing")
 module.exports.test=(req,res)=>{
     res.json({message:"Hello everybody"})
 }
@@ -45,5 +46,18 @@ module.exports.deleteUserCtrl = async (req,res,next)=>{
         res.status(200).json({message:"Your account has been deleted"})
     } catch (error) {
         next(error)
+    }
+}
+
+module.exports.getUserListings=async (req,res,next)=>{
+    if(req.user.id ===req.params.id){
+        try {
+            const listings =await Listing.find({userRef:req.params.id});
+            res.status(200).json(listings)
+        } catch (error) {
+            next(error)
+        }
+    }else{
+        return next(errorHandler(401,"You can only view your own listings"))
     }
 }
